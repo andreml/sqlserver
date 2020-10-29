@@ -1,0 +1,35 @@
+CREATE PROCEDURE [dbo].[NOMEPROCEDURE]    
+(    
+  @XML_ENTRADA XML    
+)    
+AS    
+BEGIN    
+  SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+  SET NOCOUNT ON    
+    
+  DECLARE @XML_ENTRADA XML    
+  --SET @XML_ENTRADA = 'Para testes direto no banco de dados é possível usar o mesmo objeto gerado na aplicação .Net'    
+  --SET @XML_ENTRADA = '<root><Table exemplo1="99999999" exemplo2="Texto Texto Texto"/><Table exemplo1="88888888" exemplo2="Texto 2 Texto 2 Texto 2"/></root>'
+    
+ DECLARE @TEMP_TABLE TABLE (     
+							EXEMPLO1 VARCHAR(8)    
+						  , EXEMPLO2 VARCHAR(30)    
+							)    
+  
+  /*Insere os valores do XML_ENTRADA na tabela Temporária @TEMP_TABLE*/   
+  
+  INSERT INTO @TEMP_TABLE (     
+         EXEMPLO1    
+       , EXEMPLO2    
+       )    
+    SELECT Lista.Col.value('@exemplo1','VARCHAR(8)') AS EXEMPLO1    
+         , Lista.Col.value('@exemplo2','VARCHAR(30)') AS EXEMPLO2    
+      FROM @XML_ENTRADA.nodes('/root/Table') Lista(Col)    
+ 
+	/*Aqui deve-se implementar a lógica*/   
+	
+	/* Exemplo */
+	
+	--SELECT * FROM @TEMP_TABLE
+   
+ END
